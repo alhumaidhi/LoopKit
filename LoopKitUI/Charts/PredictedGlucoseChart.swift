@@ -133,6 +133,21 @@ extension PredictedGlucoseChart {
 
         let (xAxisLayer, yAxisLayer, innerFrame) = (coordsSpace.xAxisLayer, coordsSpace.yAxisLayer, coordsSpace.chartInnerFrame)
 
+        // Sara: vertical "now" line marking the current time on the glucose chart
+        let nowDateFormatter = DateFormatter(timeStyle: .short)
+        let nowXValue = ChartAxisValueDate(date: Date(), formatter: nowDateFormatter)
+        let nowLinePoints: [ChartPoint] = {
+            guard let minY = yAxisValues.first?.scalar, let maxY = yAxisValues.last?.scalar else {
+                return []
+            }
+            return [
+                ChartPoint(x: nowXValue, y: ChartAxisValueDouble(minY)),
+                ChartPoint(x: nowXValue, y: ChartAxisValueDouble(maxY))
+            ]
+        }()
+        let nowLineModel = ChartLineModel(chartPoints: nowLinePoints, lineColor: UIColor.secondaryLabel, lineWidth: 1.5, animDuration: 0, animDelay: 0, dashPattern: nil)
+        let nowLine: ChartLayer? = nowLinePoints.count > 1 ? ChartPointsLineLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, lineModels: [nowLineModel]) : nil
+        
         // The glucose targets
         let targetFill = colors.glucoseTint.withAlphaComponent(0.2)
         let overrideFill: UIColor = colors.glucoseTint.withAlphaComponent(0.45)
@@ -214,6 +229,7 @@ extension PredictedGlucoseChart {
             glucoseChartCache?.highlightLayer,
             prediction,
             alternatePrediction,
+            nowLine,
             circles
         ]
 
