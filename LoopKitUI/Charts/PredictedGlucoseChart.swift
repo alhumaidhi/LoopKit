@@ -261,7 +261,7 @@ extension PredictedGlucoseChart {
         if let maxValue = allValues.max(), maxValue > steps.last! {
             steps.append(extraStep)
         }
-        if let minValue = allValues.min(), minValue < steps.first! {
+        if let minValue = allValues.min(), minValue < steps.first! - 2 { // tolerate a CGM "LOW" reading (39 mg/dL)
             steps.insert(0, at: 0)
         }
 
