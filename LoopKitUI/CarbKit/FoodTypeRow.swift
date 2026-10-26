@@ -122,13 +122,13 @@ fileprivate enum FoodEmojiShortcut {
         case .slow(emoji: let emoji):
             return emoji
         case .other:
-            return "🍽️"
+            return "✏️"
         }
     }
     
     static let all: [FoodEmojiShortcut] = [
-        .fast(emoji: "🍭"),
-        .medium(emoji: "🌮"),
+        .fast(emoji: "🌮"),
+        .medium(emoji: "🍽️"),
         .slow(emoji: "🍕"),
         .other
     ]

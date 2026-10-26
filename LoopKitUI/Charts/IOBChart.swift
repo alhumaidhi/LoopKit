@@ -88,6 +88,9 @@ public extension IOBChart {
             )
         }
 
+        // Sara's Pancreas: vertical "now" line
+        let nowLine = ChartNowLine.layer(xAxisLayer: xAxisLayer, yAxisLayer: yAxisLayer, xAxisValues: xAxisValues, yAxisValues: yAxisValues)
+
         let layers: [ChartLayer?] = [
             gridLayer,
             xAxisLayer,
@@ -96,6 +99,7 @@ public extension IOBChart {
             iobChartCache?.highlightLayer,
             iobArea,
             iobLine,
+            nowLine
         ]
 
         return Chart(frame: frame, innerFrame: innerFrame, settings: chartSettings, layers: layers.compactMap { $0 })

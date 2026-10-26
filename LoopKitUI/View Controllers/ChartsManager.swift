@@ -181,12 +181,21 @@ open class ChartsManager {
             )
         ]
 
-        let segments = ceil(endDate.timeIntervalSince(startDate).hours)
+        // Sara's Pancreas: space the hour labels out on long time ranges so they stay readable
+        let spanHours = endDate.timeIntervalSince(startDate).hours
+        let labelHours: Double
+        switch spanHours {
+        case ..<10: labelHours = 1
+        case ..<16: labelHours = 2
+        case ..<28: labelHours = 4
+        default: labelHours = 6
+        }
+        let segments = ceil(spanHours / labelHours)
 
         let xAxisValues = ChartAxisValuesStaticGenerator.generateXAxisValuesWithChartPoints(points,
             minSegmentCount: segments - 1,
             maxSegmentCount: segments + 1,
-            multiple: TimeInterval(hours: 1),
+            multiple: TimeInterval(hours: labelHours),
             axisValueGenerator: {
                 ChartAxisValueDate(
                     date: ChartAxisValueDate.dateFromScalar($0),

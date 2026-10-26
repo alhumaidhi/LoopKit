@@ -537,6 +537,7 @@
 		A9D3FF002A6C1944000C891D /* ChartConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3FEFA2A6C1943000C891D /* ChartConstants.swift */; };
 		A9D3FF012A6C1944000C891D /* CarbEffectChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3FEFB2A6C1943000C891D /* CarbEffectChart.swift */; };
 		A9D3FF022A6C1944000C891D /* COBChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3FEFC2A6C1943000C891D /* COBChart.swift */; };
+		5A8A0002C0FFEE00000000A2 /* ChartNowLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8A0001C0FFEE00000000A1 /* ChartNowLine.swift */; };
 		A9D3FF032A6C1944000C891D /* IOBChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3FEFD2A6C1943000C891D /* IOBChart.swift */; };
 		A9D3FF042A6C1944000C891D /* PredictedGlucoseChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3FEFE2A6C1944000C891D /* PredictedGlucoseChart.swift */; };
 		A9D3FF0A2A6C198C000C891D /* NumberFormatter+Charts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3FF052A6C198B000C891D /* NumberFormatter+Charts.swift */; };
@@ -1565,6 +1566,7 @@
 		A9D3FEFA2A6C1943000C891D /* ChartConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartConstants.swift; sourceTree = "<group>"; };
 		A9D3FEFB2A6C1943000C891D /* CarbEffectChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarbEffectChart.swift; sourceTree = "<group>"; };
 		A9D3FEFC2A6C1943000C891D /* COBChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = COBChart.swift; sourceTree = "<group>"; };
+		5A8A0001C0FFEE00000000A1 /* ChartNowLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartNowLine.swift; sourceTree = "<group>"; };
 		A9D3FEFD2A6C1943000C891D /* IOBChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IOBChart.swift; sourceTree = "<group>"; };
 		A9D3FEFE2A6C1944000C891D /* PredictedGlucoseChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredictedGlucoseChart.swift; sourceTree = "<group>"; };
 		A9D3FF052A6C198B000C891D /* NumberFormatter+Charts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NumberFormatter+Charts.swift"; sourceTree = "<group>"; };
@@ -3136,6 +3138,7 @@
 				A9D3FEFB2A6C1943000C891D /* CarbEffectChart.swift */,
 				A9D3FEFA2A6C1943000C891D /* ChartConstants.swift */,
 				A9D3FEFC2A6C1943000C891D /* COBChart.swift */,
+				5A8A0001C0FFEE00000000A1 /* ChartNowLine.swift */,
 				A9D3FEF92A6C1942000C891D /* DoseChart.swift */,
 				E9086B4424B53CC50062F5C8 /* GlucoseChart.swift */,
 				E93C86A124C8F7550073089B /* InsulinModelChart.swift */,
@@ -3937,6 +3940,7 @@
 				A9D3FEFF2A6C1944000C891D /* DoseChart.swift in Sources */,
 				43BA716D201E49220058961E /* DatePickerTableViewCell.swift in Sources */,
 				A9D3FF022A6C1944000C891D /* COBChart.swift in Sources */,
+				5A8A0002C0FFEE00000000A2 /* ChartNowLine.swift in Sources */,
 				E9C58A6E24DA65E400487A17 /* HistoricalOverrideDetailView.swift in Sources */,
 				895FE08222011F0C00FCF18A /* LabeledTextFieldTableViewCell.swift in Sources */,
 				B43DA44224D9CD8500CAFF4E /* Environment+Colors.swift in Sources */,

@@ -64,6 +64,11 @@ public class PredictedGlucoseChart: GlucoseChart, ChartProviding {
     private var predictedGlucoseSoftBounds: PredictedGlucoseBounds?
     
     private let yAxisStepSizeMGDLOverride: Double?
+
+    /// Sara's Pancreas: when true, the y-axis is fixed (40–300 mg/dL, or 2–18 mmol/L) instead of autoscaling,
+    /// so the chart never jumps between refreshes. If any value is above the top, one extra step is added.
+    public var usesFixedGlucoseAxis = false
+
         
     private var maxYAxisSegmentCount: Double {
         // when a glucose value is below the predicted glucose minimum soft bound, allow for more y-axis segments
@@ -133,20 +138,8 @@ extension PredictedGlucoseChart {
 
         let (xAxisLayer, yAxisLayer, innerFrame) = (coordsSpace.xAxisLayer, coordsSpace.yAxisLayer, coordsSpace.chartInnerFrame)
 
-        // Sara: vertical "now" line marking the current time on the glucose chart
-        let nowDateFormatter = DateFormatter(timeStyle: .short)
-        let nowXValue = ChartAxisValueDate(date: Date(), formatter: nowDateFormatter)
-        let nowLinePoints: [ChartPoint] = {
-            guard let minY = yAxisValues.first?.scalar, let maxY = yAxisValues.last?.scalar else {
-                return []
-            }
-            return [
-                ChartPoint(x: nowXValue, y: ChartAxisValueDouble(minY)),
-                ChartPoint(x: nowXValue, y: ChartAxisValueDouble(maxY))
-            ]
-        }()
-        let nowLineModel = ChartLineModel(chartPoints: nowLinePoints, lineColor: UIColor.secondaryLabel, lineWidth: 1.5, animDuration: 0, animDelay: 0, dashPattern: nil)
-        let nowLine: ChartLayer? = nowLinePoints.count > 1 ? ChartPointsLineLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, lineModels: [nowLineModel]) : nil
+        // Sara's Pancreas: vertical "now" line separating history from prediction
+        let nowLine = ChartNowLine.layer(xAxisLayer: xAxisLayer, yAxisLayer: yAxisLayer, xAxisValues: xAxisValues, yAxisValues: yAxisValues)
         
         // The glucose targets
         let targetFill = colors.glucoseTint.withAlphaComponent(0.2)
@@ -185,7 +178,8 @@ extension PredictedGlucoseChart {
         // Grid lines
         let gridLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: guideLinesLayerSettings, axisValuesX: Array(xAxisValues.dropFirst().dropLast()), axisValuesY: yAxisValues)
 
-        let circles = ChartPointsScatterCirclesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: glucosePoints, displayDelay: 0, itemSize: CGSize(width: 4, height: 4), itemFillColor: colors.glucoseTint, optimized: true)
+        // Sara's Pancreas: glucose dots are black (label color), like a CGM app
+        let circles = ChartPointsScatterCirclesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: glucosePoints, displayDelay: 0, itemSize: CGSize(width: 5, height: 5), itemFillColor: UIColor.label, optimized: true)
 
         var alternatePrediction: ChartLayer?
 
@@ -199,12 +193,13 @@ extension PredictedGlucoseChart {
         var prediction: ChartLayer?
 
         if predictedGlucosePoints.count > 1 {
-            let lineColor = (alternatePrediction == nil) ? colors.glucoseTint : UIColor.secondaryLabel
+            // Sara's Pancreas: prediction is a light blue dashed line
+            let lineColor = (alternatePrediction == nil) ? PredictedGlucoseChart.predictionLineColor : UIColor.secondaryLabel
 
             let lineModel = ChartLineModel.predictionLine(
                 points: predictedGlucosePoints,
                 color: lineColor,
-                width: 1
+                width: 2
             )
 
             prediction = ChartPointsLineLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, lineModels: [lineModel])
@@ -241,7 +236,40 @@ extension PredictedGlucoseChart {
         )
     }
     
+    /// Sara's Pancreas: light blue for the prediction line
+    static let predictionLineColor = UIColor(red: 0.36, green: 0.66, blue: 0.90, alpha: 1)
+
+    private func fixedYAxisValues(axisLabelSettings: ChartLabelSettings?) -> [ChartAxisValue] {
+        let axisValueGenerator: (Double) -> ChartAxisValue
+        if let axisLabelSettings = axisLabelSettings {
+            axisValueGenerator = { ChartAxisValueDouble($0, labelSettings: axisLabelSettings) }
+        } else {
+            axisValueGenerator = { ChartAxisValueDouble($0) }
+        }
+
+        var steps: [Double]
+        let extraStep: Double
+        if glucoseUnit == .milligramsPerDeciliter {
+            steps = [40, 100, 200, 300]
+            extraStep = 400
+        } else {
+            steps = [2, 6, 10, 14, 18]
+            extraStep = 22
+        }
+
+        let allValues = [glucosePoints, predictedGlucosePoints, targetGlucosePoints.flatMap { $0.points }].flatMap { $0 }.map { $0.y.scalar }
+        if let maxValue = allValues.max(), maxValue > steps.last! {
+            steps.append(extraStep)
+        }
+
+        return steps.map(axisValueGenerator)
+    }
+
     private func determineYAxisValues(axisLabelSettings: ChartLabelSettings? = nil) -> [ChartAxisValue] {
+        if usesFixedGlucoseAxis {
+            return fixedYAxisValues(axisLabelSettings: axisLabelSettings)
+        }
+
         let points = [
             glucosePoints, predictedGlucosePoints,
             preMealOverrideDurationPoints, targetOverrideDurationPoints,
