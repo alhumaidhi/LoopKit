@@ -13,6 +13,7 @@ public func CarbAbsorptionInputController() -> EmojiInputController {
 final class FoodEmojiDataSource: EmojiDataSource {
     private static let fast: [String] = {
         var fast = [
+            "🌮", // taco (Sara's Pancreas: fast shortcut)
             "🍭", // lollipop
             "🧃", // juice box
             "🥤", // cup with straw (soda)
@@ -51,7 +52,6 @@ final class FoodEmojiDataSource: EmojiDataSource {
 
     private static let medium: [String] = {
         var medium = [
-            "🌮", // taco
             "🍟", // french fries
             "🍳", // cooking
             "🍲", // pot of food

@@ -190,12 +190,12 @@ open class ChartsManager {
         case ..<28: labelHours = 4
         default: labelHours = 6
         }
-        let segments = ceil(spanHours / labelHours)
+        let segments = ceil(spanHours)
 
         let xAxisValues = ChartAxisValuesStaticGenerator.generateXAxisValuesWithChartPoints(points,
             minSegmentCount: segments - 1,
             maxSegmentCount: segments + 1,
-            multiple: TimeInterval(hours: labelHours),
+            multiple: TimeInterval(hours: 1),
             axisValueGenerator: {
                 ChartAxisValueDate(
                     date: ChartAxisValueDate.dateFromScalar($0),
@@ -205,6 +205,15 @@ open class ChartsManager {
             },
             addPaddingSegmentIfEdge: false
         )
+        if labelHours > 1 {
+            let calendar = Calendar.current
+            for value in xAxisValues {
+                let hour = calendar.component(.hour, from: ChartAxisValueDate.dateFromScalar(value.scalar))
+                if hour % Int(labelHours) != 0 {
+                    value.hidden = true
+                }
+            }
+        }
         xAxisValues.first?.hidden = true
         xAxisValues.last?.hidden = true
 

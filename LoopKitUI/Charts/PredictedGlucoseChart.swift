@@ -261,6 +261,9 @@ extension PredictedGlucoseChart {
         if let maxValue = allValues.max(), maxValue > steps.last! {
             steps.append(extraStep)
         }
+        if let minValue = allValues.min(), minValue < steps.first! {
+            steps.insert(0, at: 0)
+        }
 
         return steps.map(axisValueGenerator)
     }
